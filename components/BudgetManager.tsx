@@ -118,73 +118,75 @@ const BudgetManager: React.FC<BudgetManagerProps> = ({ portfolios, schedules, on
 
   const renderPortfolioList = () => (
     <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="p-6 border-b border-slate-100 flex justify-between items-center">
+        <div className="p-6 border-b border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
             <h2 className="text-lg font-bold text-slate-800">Campaign Portfolios</h2>
             <span className="text-sm text-slate-500">{portfolios.length} Portfolios found</span>
         </div>
-        <table className="w-full text-left">
-            <thead className="bg-slate-50 text-slate-500 text-xs uppercase font-semibold">
-                <tr>
-                    <th className="px-6 py-4">Portfolio Name</th>
-                    <th className="px-6 py-4">Marketplace</th>
-                    <th className="px-6 py-4">Default Cap</th>
-                    <th className="px-6 py-4">Current Cap</th>
-                    <th className="px-6 py-4">Dayparting</th>
-                    <th className="px-6 py-4 text-right">Actions</th>
-                </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-                {portfolios.map(p => (
-                    <tr key={p.id} className="hover:bg-slate-50 transition-colors">
-                        <td className="px-6 py-4 font-medium text-slate-800">{p.name}</td>
-                        <td className="px-6 py-4 text-slate-500">{p.marketplace}</td>
-                        <td className="px-6 py-4 text-slate-500">${p.defaultBudgetCap}</td>
-                        <td className="px-6 py-4">
-                            <span className={`font-bold ${p.currentBudgetCap !== p.defaultBudgetCap ? 'text-brand-600' : 'text-slate-700'}`}>
-                                ${p.currentBudgetCap}
-                            </span>
-                            {p.currentBudgetCap !== p.defaultBudgetCap && (
-                                <span className="ml-2 text-[10px] bg-brand-50 text-brand-600 px-1.5 py-0.5 rounded uppercase font-bold">Override</span>
-                            )}
-                        </td>
-                        <td className="px-6 py-4">
-                            <button 
-                                onClick={() => handleToggleDayparting(p.id, p.isDaypartingEnabled)}
-                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-                                    p.isDaypartingEnabled 
-                                    ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' 
-                                    : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
-                                }`}
-                            >
-                                {p.isDaypartingEnabled ? <CheckCircle size={14} /> : <XCircle size={14} />}
-                                {p.isDaypartingEnabled ? 'Enabled' : 'Disabled'}
-                            </button>
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                            <button 
-                                disabled={!p.isDaypartingEnabled}
-                                onClick={() => setEditingPortfolioId(p.id)}
-                                className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                                    p.isDaypartingEnabled
-                                    ? 'bg-brand-50 text-brand-600 hover:bg-brand-100'
-                                    : 'bg-slate-50 text-slate-300 cursor-not-allowed'
-                                }`}
-                            >
-                                <Edit size={16} />
-                                Manage Rules
-                            </button>
-                        </td>
-                    </tr>
-                ))}
-                {portfolios.length === 0 && (
+        <div className="overflow-x-auto">
+            <table className="w-full text-left min-w-[800px]">
+                <thead className="bg-slate-50 text-slate-500 text-xs uppercase font-semibold">
                     <tr>
-                        <td colSpan={6} className="px-6 py-12 text-center text-slate-400">
-                            No portfolios found for this account.
-                        </td>
+                        <th className="px-6 py-4">Portfolio Name</th>
+                        <th className="px-6 py-4">Marketplace</th>
+                        <th className="px-6 py-4">Default Cap</th>
+                        <th className="px-6 py-4">Current Cap</th>
+                        <th className="px-6 py-4">Dayparting</th>
+                        <th className="px-6 py-4 text-right">Actions</th>
                     </tr>
-                )}
-            </tbody>
-        </table>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                    {portfolios.map(p => (
+                        <tr key={p.id} className="hover:bg-slate-50 transition-colors">
+                            <td className="px-6 py-4 font-medium text-slate-800">{p.name}</td>
+                            <td className="px-6 py-4 text-slate-500">{p.marketplace}</td>
+                            <td className="px-6 py-4 text-slate-500">${p.defaultBudgetCap}</td>
+                            <td className="px-6 py-4">
+                                <span className={`font-bold ${p.currentBudgetCap !== p.defaultBudgetCap ? 'text-brand-600' : 'text-slate-700'}`}>
+                                    ${p.currentBudgetCap}
+                                </span>
+                                {p.currentBudgetCap !== p.defaultBudgetCap && (
+                                    <span className="ml-2 text-[10px] bg-brand-50 text-brand-600 px-1.5 py-0.5 rounded uppercase font-bold">Override</span>
+                                )}
+                            </td>
+                            <td className="px-6 py-4">
+                                <button 
+                                    onClick={() => handleToggleDayparting(p.id, p.isDaypartingEnabled)}
+                                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                                        p.isDaypartingEnabled 
+                                        ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' 
+                                        : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
+                                    }`}
+                                >
+                                    {p.isDaypartingEnabled ? <CheckCircle size={14} /> : <XCircle size={14} />}
+                                    {p.isDaypartingEnabled ? 'Enabled' : 'Disabled'}
+                                </button>
+                            </td>
+                            <td className="px-6 py-4 text-right">
+                                <button 
+                                    disabled={!p.isDaypartingEnabled}
+                                    onClick={() => setEditingPortfolioId(p.id)}
+                                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                                        p.isDaypartingEnabled
+                                        ? 'bg-brand-50 text-brand-600 hover:bg-brand-100'
+                                        : 'bg-slate-50 text-slate-300 cursor-not-allowed'
+                                    }`}
+                                >
+                                    <Edit size={16} />
+                                    Manage Rules
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                    {portfolios.length === 0 && (
+                        <tr>
+                            <td colSpan={6} className="px-6 py-12 text-center text-slate-400">
+                                No portfolios found for this account.
+                            </td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
+        </div>
     </div>
   );
 
@@ -200,18 +202,18 @@ const BudgetManager: React.FC<BudgetManagerProps> = ({ portfolios, schedules, on
                 <ArrowLeft className="w-4 h-4 mr-1" /> Back to Portfolios
             </button>
 
-            <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center">
+            <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <h2 className="text-xl font-bold text-slate-800">Managing: {activePortfolio.name}</h2>
                     <p className="text-slate-500 text-sm">Marketplace: {activePortfolio.marketplace} • Default Cap: ${activePortfolio.defaultBudgetCap}</p>
                 </div>
-                <div className="text-right">
+                <div className="text-left md:text-right">
                     <span className="block text-xs text-slate-400 uppercase">Current Real-time Cap</span>
                     <span className="text-2xl font-bold text-brand-600">${activePortfolio.currentBudgetCap}</span>
                 </div>
             </div>
 
-            {/* Editor Columns */}
+            {/* Editor Columns - Stack on mobile */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                  {/* Left: Create Rule */}
                 <div className="space-y-6">
@@ -284,7 +286,7 @@ const BudgetManager: React.FC<BudgetManagerProps> = ({ portfolios, schedules, on
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-6">
       {/* Top Header */}
       <div>
         <h1 className="text-2xl font-bold text-slate-800">Dayparting Manager</h1>

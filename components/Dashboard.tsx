@@ -71,7 +71,7 @@ const Dashboard: React.FC<DashboardProps> = ({ data }) => {
   };
 
   return (
-    <div className="space-y-8 p-6">
+    <div className="space-y-8 p-4 md:p-6">
       {/* Header Controls */}
       <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4">
         <div>
@@ -79,17 +79,17 @@ const Dashboard: React.FC<DashboardProps> = ({ data }) => {
           <p className="text-slate-500">Track your Amazon PPC efficiency and scale.</p>
         </div>
         
-        <div className="flex flex-col sm:flex-row gap-4">
+        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
           {/* Granularity Selector */}
-          <div className="flex items-center bg-white rounded-lg shadow-sm border border-slate-200 p-1">
-             <div className="px-3 text-xs font-bold text-slate-400 uppercase flex items-center gap-1 border-r border-slate-100 mr-1">
+          <div className="flex items-center bg-white rounded-lg shadow-sm border border-slate-200 p-1 overflow-x-auto">
+             <div className="px-3 text-xs font-bold text-slate-400 uppercase flex items-center gap-1 border-r border-slate-100 mr-1 flex-shrink-0">
                 <BarChart2 size={14} /> View By
              </div>
              {(['DAILY', 'WEEKLY', 'MONTHLY'] as Granularity[]).map((g) => (
                 <button
                   key={g}
                   onClick={() => setGranularity(g)}
-                  className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
+                  className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all whitespace-nowrap ${
                     granularity === g 
                     ? 'bg-slate-800 text-white shadow-sm' 
                     : 'text-slate-600 hover:bg-slate-50'
@@ -101,15 +101,15 @@ const Dashboard: React.FC<DashboardProps> = ({ data }) => {
           </div>
 
           {/* Date Range Selector */}
-          <div className="flex items-center bg-white rounded-lg shadow-sm border border-slate-200 p-1">
-            <div className="px-3 text-xs font-bold text-slate-400 uppercase flex items-center gap-1 border-r border-slate-100 mr-1">
+          <div className="flex items-center bg-white rounded-lg shadow-sm border border-slate-200 p-1 overflow-x-auto">
+            <div className="px-3 text-xs font-bold text-slate-400 uppercase flex items-center gap-1 border-r border-slate-100 mr-1 flex-shrink-0">
                 <Calendar size={14} /> Range
              </div>
             {Object.values(DateRangeOption).map((opt) => (
               <button
                 key={opt}
                 onClick={() => setRange(opt)}
-                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
+                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all whitespace-nowrap ${
                   range === opt 
                   ? 'bg-brand-500 text-white shadow-sm' 
                   : 'text-slate-600 hover:bg-slate-50'
@@ -156,7 +156,7 @@ const Dashboard: React.FC<DashboardProps> = ({ data }) => {
 
       {/* Main Chart */}
       <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-2">
           <h2 className="text-lg font-bold text-slate-800">Spend vs. Total Sales Analysis</h2>
           <div className="flex items-center space-x-4">
             <div className="flex items-center"><span className="w-3 h-3 bg-brand-500 rounded-full mr-2"></span><span className="text-xs text-slate-500">Sales</span></div>
@@ -165,9 +165,9 @@ const Dashboard: React.FC<DashboardProps> = ({ data }) => {
           </div>
         </div>
         
-        <div className="h-[400px] w-full">
+        <div className="h-[300px] md:h-[400px] w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={chartData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+            <ComposedChart data={chartData} margin={{ top: 20, right: 0, bottom: 20, left: -20 }}>
               <CartesianGrid stroke="#f1f5f9" vertical={false} />
               <XAxis 
                 dataKey="date" 
@@ -241,7 +241,7 @@ const Dashboard: React.FC<DashboardProps> = ({ data }) => {
 
        {/* AI Analysis Section */}
        <div className="bg-gradient-to-r from-indigo-50 to-blue-50 p-6 rounded-xl border border-indigo-100">
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
           <div className="flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-indigo-600" />
             <h2 className="text-lg font-bold text-indigo-900">AI Performance Analyst</h2>
@@ -249,7 +249,7 @@ const Dashboard: React.FC<DashboardProps> = ({ data }) => {
           <button 
             onClick={handleAiAnalysis}
             disabled={loadingAi}
-            className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50 flex items-center gap-2"
+            className="w-full sm:w-auto px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {loadingAi ? 'Analyzing...' : 'Generate Insights'}
           </button>

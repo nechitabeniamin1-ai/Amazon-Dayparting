@@ -1,5 +1,5 @@
-import React from 'react';
-import { LayoutDashboard, PieChart, Settings, LogOut, Search, Bell, ChevronDown, Store, FileText } from 'lucide-react';
+import React, { useState } from 'react';
+import { LayoutDashboard, PieChart, Settings, LogOut, Search, Bell, ChevronDown, Store, FileText, Menu, X } from 'lucide-react';
 import { Agent, AmazonAccount } from '../types';
 
 interface LayoutProps {
@@ -17,37 +17,73 @@ const Layout: React.FC<LayoutProps> = ({
   children, activeTab, setActiveTab, currentUser, 
   assignedAccounts, selectedAccount, onSelectAccount, onLogout 
 }) => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+  const closeSidebar = () => setIsSidebarOpen(false);
+
+  // Helper to handle navigation and auto-close on mobile
+  const handleNavClick = (tab: 'dashboard' | 'budget' | 'report') => {
+    setActiveTab(tab);
+    closeSidebar();
+  };
+
   return (
-    <div className="min-h-screen bg-slate-50 flex">
-      {/* Sidebar */}
-      <aside className="w-64 bg-slate-900 text-slate-300 flex flex-col fixed h-full z-10 transition-all no-print">
-        <div className="p-6 border-b border-slate-800">
+    <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row">
+      
+      {/* Mobile Header Bar */}
+      <div className="md:hidden bg-slate-900 text-white p-4 flex justify-between items-center sticky top-0 z-40">
+        <div className="flex items-center gap-2 font-bold text-lg">
+           <div className="w-8 h-8 bg-brand-500 rounded-lg flex items-center justify-center">A</div>
+           AmzOptima
+        </div>
+        <button onClick={toggleSidebar} className="p-2 text-slate-300 hover:text-white">
+          {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </div>
+
+      {/* Mobile Overlay Backdrop */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-30 md:hidden backdrop-blur-sm"
+          onClick={closeSidebar}
+        />
+      )}
+
+      {/* Sidebar Navigation */}
+      <aside 
+        className={`
+          fixed md:sticky top-0 left-0 h-screen w-64 bg-slate-900 text-slate-300 flex flex-col z-40 transition-transform duration-300 ease-in-out no-print
+          ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+        `}
+      >
+        <div className="p-6 border-b border-slate-800 hidden md:block">
           <div className="flex items-center gap-2 text-white font-bold text-xl">
             <div className="w-8 h-8 bg-brand-500 rounded-lg flex items-center justify-center">A</div>
             AmzOptima
           </div>
         </div>
 
-        <nav className="flex-1 p-4 space-y-2">
-          <div className="mb-6 px-4">
+        <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+          <div className="mb-6 px-4 hidden md:block">
               <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Main Menu</p>
           </div>
           <button 
-            onClick={() => setActiveTab('dashboard')}
+            onClick={() => handleNavClick('dashboard')}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${activeTab === 'dashboard' ? 'bg-brand-600 text-white' : 'hover:bg-slate-800'}`}
           >
             <LayoutDashboard size={20} />
             Dashboard
           </button>
           <button 
-            onClick={() => setActiveTab('budget')}
+            onClick={() => handleNavClick('budget')}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${activeTab === 'budget' ? 'bg-brand-600 text-white' : 'hover:bg-slate-800'}`}
           >
             <PieChart size={20} />
             Dayparting Manager
           </button>
           <button 
-            onClick={() => setActiveTab('report')}
+            onClick={() => handleNavClick('report')}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${activeTab === 'report' ? 'bg-brand-600 text-white' : 'hover:bg-slate-800'}`}
           >
             <FileText size={20} />
@@ -55,7 +91,7 @@ const Layout: React.FC<LayoutProps> = ({
           </button>
         </nav>
 
-        <div className="p-4 border-t border-slate-800">
+        <div className="p-4 border-t border-slate-800 bg-slate-900">
           <div className="flex items-center gap-3 mb-4 px-2">
             <img src={currentUser.avatarUrl} alt={currentUser.name} className="w-8 h-8 rounded-full border border-slate-600" />
             <div className="overflow-hidden">
@@ -74,25 +110,27 @@ const Layout: React.FC<LayoutProps> = ({
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 ml-64 min-w-0">
-        {/* Header */}
-        <header className="h-16 bg-white border-b border-slate-200 sticky top-0 z-20 px-8 flex items-center justify-between no-print">
+      <main className="flex-1 min-w-0 md:ml-0 transition-all duration-300">
+        {/* Desktop Header */}
+        <header className="h-16 bg-white border-b border-slate-200 sticky top-0 z-20 px-4 md:px-8 flex items-center justify-between no-print shadow-sm md:shadow-none">
           
           {/* Account Selector */}
-          <div className="flex items-center gap-4">
-            <div className="relative group">
-                <button className="flex items-center gap-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 px-4 py-2 rounded-lg transition-colors">
-                    <Store className="w-4 h-4 text-slate-500" />
-                    <div className="text-left">
-                        <p className="text-xs text-slate-400 font-medium">Active Account</p>
-                        <p className="text-sm font-bold text-slate-800 leading-none">
-                          {selectedAccount?.name || 'Select Account'} <span className="text-xs text-slate-400 font-normal">({selectedAccount?.marketplaceCode})</span>
-                        </p>
+          <div className="flex items-center gap-4 flex-1">
+            <div className="relative group w-full max-w-[240px]">
+                <button className="w-full flex items-center justify-between gap-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 px-4 py-2 rounded-lg transition-colors">
+                    <div className="flex items-center gap-3 overflow-hidden">
+                      <Store className="w-4 h-4 text-slate-500 flex-shrink-0" />
+                      <div className="text-left overflow-hidden">
+                          <p className="text-xs text-slate-400 font-medium hidden sm:block">Active Account</p>
+                          <p className="text-sm font-bold text-slate-800 leading-none truncate">
+                            {selectedAccount?.name || 'Select Account'} 
+                          </p>
+                      </div>
                     </div>
-                    <ChevronDown className="w-4 h-4 text-slate-400 ml-2" />
+                    <ChevronDown className="w-4 h-4 text-slate-400 ml-2 flex-shrink-0" />
                 </button>
                 {/* Dropdown */}
-                <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-slate-200 hidden group-hover:block z-50">
+                <div className="absolute top-full left-0 mt-2 w-full bg-white rounded-lg shadow-xl border border-slate-200 hidden group-hover:block z-50">
                     <div className="p-2">
                         {assignedAccounts.map(account => (
                             <button
@@ -102,8 +140,8 @@ const Layout: React.FC<LayoutProps> = ({
                                     selectedAccount?.id === account.id ? 'bg-brand-50 text-brand-700 font-bold' : 'hover:bg-slate-50 text-slate-600'
                                 }`}
                             >
-                                <span>{account.name}</span>
-                                <span className="text-xs bg-slate-100 text-slate-500 px-1.5 rounded">{account.marketplaceCode}</span>
+                                <span className="truncate mr-2">{account.name}</span>
+                                <span className="text-xs bg-slate-100 text-slate-500 px-1.5 rounded flex-shrink-0">{account.marketplaceCode}</span>
                             </button>
                         ))}
                     </div>
@@ -111,8 +149,8 @@ const Layout: React.FC<LayoutProps> = ({
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="relative w-64">
+          <div className="flex items-center gap-2 md:gap-4 ml-4">
+            <div className="relative w-48 hidden md:block">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
                 <input 
                 type="text" 
@@ -127,7 +165,7 @@ const Layout: React.FC<LayoutProps> = ({
           </div>
         </header>
 
-        <div className="max-w-7xl mx-auto min-w-0">
+        <div className="max-w-7xl mx-auto min-w-0 w-full">
           {children}
         </div>
       </main>

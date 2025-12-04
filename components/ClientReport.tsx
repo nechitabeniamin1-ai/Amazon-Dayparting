@@ -69,17 +69,17 @@ const ClientReport: React.FC<ClientReportProps> = ({ data, account }) => {
   // --- Render Helpers ---
 
   const PrintHeader = () => (
-    <div className="flex justify-between items-end border-b-2 border-slate-800 pb-6 mb-8">
+    <div className="flex flex-col md:flex-row md:justify-between md:items-end border-b-2 border-slate-800 pb-6 mb-8 gap-4">
         <div>
             <div className="flex items-center gap-2 mb-2">
                 <div className="w-8 h-8 bg-brand-600 text-white rounded flex items-center justify-center font-bold">A</div>
                 <span className="text-xl font-bold text-slate-800 tracking-tight">AmzOptima Reports</span>
             </div>
-            <h1 className="text-3xl font-bold text-slate-900">Performance Report</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-slate-900">Performance Report</h1>
             <p className="text-slate-500 mt-1">Generated for: <span className="font-semibold text-slate-700">{account.name}</span> ({account.marketplaceCode})</p>
         </div>
-        <div className="text-right">
-            <div className="flex items-center justify-end text-slate-500 text-sm mb-1">
+        <div className="md:text-right">
+            <div className="flex md:justify-end items-center text-slate-500 text-sm mb-1">
                 <Calendar className="w-4 h-4 mr-1" />
                 <span>
                     {kpiScope === 'LAST_COMPLETE_MONTH' ? 'Summary: Last Month' : 'Summary: Last 3 Months'}
@@ -101,7 +101,7 @@ const ClientReport: React.FC<ClientReportProps> = ({ data, account }) => {
   );
 
   return (
-    <div className="max-w-5xl mx-auto p-8 bg-white min-h-screen">
+    <div className="max-w-5xl mx-auto p-4 md:p-8 bg-white min-h-screen">
       
       {/* Configuration Bar (Hidden on Print) */}
       <div className="no-print mb-8 bg-slate-50 p-6 rounded-xl border border-slate-200 space-y-4">
@@ -184,13 +184,14 @@ const ClientReport: React.FC<ClientReportProps> = ({ data, account }) => {
                 ({kpiScope === 'LAST_COMPLETE_MONTH' ? 'Last Month' : 'Last 3 Months'})
              </span>
         </h2>
-        <div className="grid grid-cols-4 gap-4 mb-6">
+        {/* Responsive Grid: 2 cols on tablet, 4 on desktop/print */}
+        <div className="grid grid-cols-2 md:grid-cols-4 print:grid-cols-4 gap-4 mb-6">
             <KpiBox label="Total Sales" value={formatCurrency(totals.totalSales)} sub="Organic + PPC" highlight />
             <KpiBox label="Ad Spend" value={formatCurrency(totals.spend)} sub={totals.totalSales ? `${(totals.spend / totals.totalSales * 100).toFixed(1)}% of Sales` : '0%'} />
             <KpiBox label="PPC Sales" value={formatCurrency(totals.ppcSales)} sub={totals.totalSales ? `${(totals.ppcSales / totals.totalSales * 100).toFixed(1)}% Contribution` : '0%'} />
             <KpiBox label="ROAS" value={`${kpis.roas.toFixed(2)}x`} sub="Return on Ad Spend" />
         </div>
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 print:grid-cols-4 gap-4">
              <KpiBox label="ACoS" value={`${kpis.acos.toFixed(2)}%`} sub="Efficiency Target" />
              <KpiBox label="CTR" value={`${kpis.ctr.toFixed(2)}%`} sub="Click Through Rate" />
              <KpiBox label="Avg. CPC" value={formatCurrency(kpis.cpc)} sub="Cost Per Click" />
@@ -230,7 +231,8 @@ const ClientReport: React.FC<ClientReportProps> = ({ data, account }) => {
         </div>
       </section>
 
-      <div className="grid grid-cols-2 gap-8 mb-8">
+      {/* Responsive Grid for charts: 1 col on mobile, 2 on desktop/print */}
+      <div className="grid grid-cols-1 md:grid-cols-2 print:grid-cols-2 gap-8 mb-8">
         
         {/* 2. Efficiency (ACoS) */}
         <section className="break-inside-avoid">
@@ -285,7 +287,7 @@ const ClientReport: React.FC<ClientReportProps> = ({ data, account }) => {
         </section>
       </div>
 
-       <div className="grid grid-cols-2 gap-8 mb-8">
+       <div className="grid grid-cols-1 md:grid-cols-2 print:grid-cols-2 gap-8 mb-8">
         {/* 4. CPC Trends */}
         <section className="break-inside-avoid">
              <div className="mb-4">
@@ -339,7 +341,7 @@ const ClientReport: React.FC<ClientReportProps> = ({ data, account }) => {
         </section>
       </div>
 
-      <div className="mt-8 border-t border-slate-200 pt-6 flex justify-between items-center text-xs text-slate-400">
+      <div className="mt-8 border-t border-slate-200 pt-6 flex flex-col md:flex-row justify-between items-center text-xs text-slate-400 gap-2">
         <p>© {new Date().getFullYear()} AmzOptima Analytics. Proprietary & Confidential.</p>
         <p>Report Generated: {new Date().toLocaleDateString()} {new Date().toLocaleTimeString()}</p>
       </div>
