@@ -287,7 +287,7 @@ const BudgetManager: React.FC<BudgetManagerProps> = ({ portfolios, schedules, on
     <div className="p-6 space-y-6">
       {/* Top Header */}
       <div>
-        <h1 className="text-2xl font-bold text-slate-800">Advanced Budget Manager</h1>
+        <h1 className="text-2xl font-bold text-slate-800">Dayparting Manager</h1>
         <p className="text-slate-500">Enable dayparting on portfolios and configure schedule rules.</p>
       </div>
 

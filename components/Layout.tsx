@@ -44,7 +44,7 @@ const Layout: React.FC<LayoutProps> = ({
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${activeTab === 'budget' ? 'bg-brand-600 text-white' : 'hover:bg-slate-800'}`}
           >
             <PieChart size={20} />
-            Budget Manager
+            Dayparting Manager
           </button>
           <button 
             onClick={() => setActiveTab('report')}

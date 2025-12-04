@@ -4,16 +4,16 @@ import { PerformanceData, Portfolio, BudgetSchedule, Agent, AmazonAccount } from
 export const AGENTS: Agent[] = [
   {
     id: 'agent1',
-    name: 'Sarah Connor',
-    email: 'sarah@amzoptima.com',
-    avatarUrl: 'https://ui-avatars.com/api/?name=Sarah+Connor&background=0ea5e9&color=fff',
+    name: 'Stefan',
+    email: 'Stefan@insiders.agency',
+    avatarUrl: 'https://ui-avatars.com/api/?name=Stefan&background=0ea5e9&color=fff',
     assignedAccountIds: ['acc1', 'acc2'],
   },
   {
     id: 'agent2',
-    name: 'John Smith',
-    email: 'john@amzoptima.com',
-    avatarUrl: 'https://ui-avatars.com/api/?name=John+Smith&background=f59e0b&color=fff',
+    name: 'Radu',
+    email: 'Radu@insiders.agency',
+    avatarUrl: 'https://ui-avatars.com/api/?name=Radu&background=f59e0b&color=fff',
     assignedAccountIds: ['acc2', 'acc3'],
   },
 ];
